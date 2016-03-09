@@ -2,21 +2,19 @@
 
 namespace ec5\Http\Controllers\Auth;
 
-use ec5\Models\Users\User;
-use Validator;
-use ec5\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use ec5\Repositories\Eloquent\User\UserRepository;
-use ec5\Libraries\Jwt\Jwt;
-use Config;
-use View;
+use ec5\Http\Validation\Auth\RuleLogin as LoginValidator;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use ec5\Libraries\Jwt\JwtUserProvider;
+use ec5\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 use Exception;
 use Socialite;
+use Config;
+use View;
 use Auth;
 use Ldap;
-use ec5\Http\Validation\Auth\RuleLogin as LoginValidator;
 
 class AuthController extends Controller
 {
@@ -25,10 +23,8 @@ class AuthController extends Controller
     | Registration & Login Controller
     |--------------------------------------------------------------------------
     |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
+    | This controller handles authentication of existing users.
+    | THe default driver is 'jwt'.
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
@@ -39,14 +35,9 @@ class AuthController extends Controller
     protected $redirectPath = '/';
 
     /**
-     * @var string superadmin/admin redirect path
+     * @var JwtUserProvider
      */
-    protected $adminRedirectPath = '/admin';
-
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
+    protected $provider;
 
     /**
      * @var
@@ -54,20 +45,15 @@ class AuthController extends Controller
     protected $authMethods = [];
 
     /**
-     * @var int
-     */
-    protected $expirationTime = 60;
-
-    /**
-     * Create a new authentication controller instance, injecting UserRepository instance
+     * Create a new authentication controller instance, injecting JwtUserProvider instance
      *
-     * @param UserRepository $userRepository
+     * @param JwtUserProvider $provider
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(JwtUserProvider $provider)
     {
         // Set middleware to guest, exempting getLogout as this requires a logged in user
         $this->middleware('guest', ['except' => ['getLogout']]);
-        $this->userRepository = $userRepository;
+        $this->provider = $provider;
 
         // Determine which authentication methods are available
         $this->authMethods = Config::get('auth.auth_methods');
@@ -136,7 +122,7 @@ class AuthController extends Controller
             );
 
             // Attempt to log the user in
-            if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+            if (Auth::attempt($credentials)) {
                 return $this->handleUserWasAuthenticated($request, $throttles);
             }
 
@@ -185,10 +171,11 @@ class AuthController extends Controller
     /**
      * Function for handling the provider specific auth callback
      *
+     * @param $request
      * @param $provider
      * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback(Request $request, $provider)
     {
 
         try {
@@ -196,19 +183,12 @@ class AuthController extends Controller
             $providerUser = Socialite::with($provider)->user();
 
             // Check user exists and is active
-            $socialUser = $this->userRepository->findOrCreateSocialUser($provider, $providerUser);
+            $socialUser = $this->provider->findOrCreateSocialUser($provider, $providerUser);
 
             if ($socialUser) {
                 // Login user
                 Auth::login($socialUser, true);
-
-                // Redirect to home or admin page, depending on server role
-                if ($socialUser->role == 'basic') {
-                    return view('app');
-                } else {
-                    return redirect($this->adminRedirectPath);
-                }
-
+                return $this->handleUserWasAuthenticated($request, null);
             }
 
         } catch (Exception $e) {
@@ -236,6 +216,15 @@ class AuthController extends Controller
         // Check this auth method is allowed
         if (in_array('ldap', $this->authMethods)) {
 
+            // Throttle local login attempts
+            $throttles = $this->isUsingThrottlesLoginsTrait();
+
+            // Send a lock out response if user has made too many login attempts;
+            // response is set in Lang auth.throttle
+            if ($throttles && $this->hasTooManyLoginAttempts($request)) {
+                return view('auth.login')->withErrors(['ec5_37']);
+            }
+
             // check if there were any errors while connecting
             if (Ldap::hasErrors()) {
                 return view('auth.login')
@@ -249,25 +238,23 @@ class AuthController extends Controller
             if ($ldapUser) {
 
                 // Check user exists and is active
-                $user = $this->userRepository->findOrCreateLdapUser($ldapUser);
+                $user = $this->provider->findOrCreateLdapUser($ldapUser);
 
                 if ($user) {
 
                     // Login user
                     Auth::login($user, true);
-                    return $this->handleUserWasAuthenticated($request, null);
-
+                    return $this->handleUserWasAuthenticated($request, $throttles);
                 }
-
             }
 
-            // check for any further errors
+            // Check for any further errors
             if (Ldap::hasErrors()) {
                 return view('auth.login')
                     ->withErrors(Ldap::errors());
             }
 
-            // could not authenticate
+            // Could not authenticate
             return view('auth.login')->withErrors(['ec5_33']);
 
         }

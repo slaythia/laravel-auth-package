@@ -1,9 +1,8 @@
 <?php namespace ec5\Repositories\Eloquent\User;
 
+use ec5\Libraries\Ldap\LdapUser;
 use ec5\Models\Users\User;
 use Exception;
-use ec5\Libraries\Ldap\LdapUser;
-
 
 trait CreateRepository {
 

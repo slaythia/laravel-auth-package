@@ -2,8 +2,8 @@
 
 namespace ec5\Http\Controllers\Auth;
 
-use ec5\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use ec5\Http\Controllers\Controller;
 
 class PasswordController extends Controller
 {
@@ -13,8 +13,7 @@ class PasswordController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
+    | and uses a simple trait to include this behavior.
     |
     */
 

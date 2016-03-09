@@ -2,9 +2,8 @@
 
 namespace ec5\Libraries\Jwt;
 
-use Illuminate\Support\ServiceProvider;
-//use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use ec5\Repositories\Eloquent\User\UserRepository;
+use Illuminate\Support\ServiceProvider;
 use ec5\Libraries\Jwt\JwtUserProvider;
 use ec5\Libraries\Jwt\JwtGuard;
 use ec5\Libraries\Jwt\Jwt;

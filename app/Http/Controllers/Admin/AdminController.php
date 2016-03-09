@@ -2,10 +2,10 @@
 
 namespace ec5\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use ec5\Http\Requests;
 use ec5\Repositories\Eloquent\User\UserRepository;
 use ec5\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use ec5\Http\Requests;
 
 class AdminController extends Controller
 {
@@ -14,7 +14,7 @@ class AdminController extends Controller
     | Admin Controller
     |--------------------------------------------------------------------------
     |
-    | This controller handles the server administration tasks
+    | This controller handles the server administration tasks.
     |
     */
 

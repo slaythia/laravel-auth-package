@@ -3,7 +3,6 @@
 namespace ec5\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Auth;
 use Config;
 use Lang;
 

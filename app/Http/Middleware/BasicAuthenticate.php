@@ -2,28 +2,19 @@
 
 namespace ec5\Http\Middleware;
 
+use Illuminate\Support\Facades\Auth;
 use Closure;
-use Illuminate\Contracts\Auth\Guard;
 
 class BasicAuthenticate
 {
-    /**
-     * The Guard implementation.
-     *
-     * @var Guard
-     */
-    protected $auth;
-
-    /**
-     * Create a new filter instance.
-     *
-     * @param  Guard  $auth
-     * @return void
-     */
-    public function __construct(Guard $auth)
-    {
-        $this->auth = $auth;
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | BasicAuthenticate
+    |--------------------------------------------------------------------------
+    |
+    | This middleware checks the user is a logged in 'basic' before being allowed to proceed
+    |
+    */
 
     /**
      * Handle an incoming request.

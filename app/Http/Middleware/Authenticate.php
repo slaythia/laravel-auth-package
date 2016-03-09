@@ -2,11 +2,20 @@
 
 namespace ec5\Http\Middleware;
 
-use Closure;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 
 class Authenticate
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticate
+    |--------------------------------------------------------------------------
+    |
+    | This middleware checks the user is logged in before being allowed to proceed
+    |
+    */
+
     /**
      * Handle an incoming request.
      *

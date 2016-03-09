@@ -2,11 +2,20 @@
 
 namespace ec5\Http\Middleware;
 
-use Closure;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 
 class RedirectIfAuthenticated
 {
+    /*
+    |--------------------------------------------------------------------------
+    | RedirectIfAuthenticated
+    |--------------------------------------------------------------------------
+    |
+    | This middleware checks the user is a 'guest' before being allowed to proceed
+    |
+    */
+
     /**
      * Handle an incoming request.
      *

@@ -1,9 +1,7 @@
 <?php namespace ec5\Repositories\Eloquent\User;
 
-use ec5\Repositories\Contracts\SearchInterface;
 use ec5\Models\Users\User;
 use Auth;
-
 
 trait SearchRepository {
 

@@ -2,15 +2,15 @@
 
 namespace ec5\Http\Controllers\Admin;
 
+use ec5\Http\Validation\Admin\RuleUpdateServerRole as UpdateServerRoleValidator;
+use ec5\Http\Validation\Admin\RuleUpdateState as UpdateStateValidator;
+use ec5\Http\Validation\Admin\RuleAddUser as AddUserValidator;
+use ec5\Repositories\Eloquent\User\UserRepository;
+use ec5\Http\Controllers\Api\Json\ApiResponse;
+use ec5\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use ec5\Http\Requests;
 use Redirect;
-use ec5\Repositories\Eloquent\User\UserRepository;
-use ec5\Http\Controllers\Controller;
-use ec5\Http\Validation\Admin\RuleAddUser as AddUserValidator;
-use ec5\Http\Validation\Admin\RuleUpdateState as UpdateStateValidator;
-use ec5\Http\Validation\Admin\RuleUpdateServerRole as UpdateServerRoleValidator;
-use ec5\Http\Controllers\Api\Json\ApiResponse;
 use Lang;
 
 class ManageUsersController extends Controller
@@ -20,7 +20,7 @@ class ManageUsersController extends Controller
     | Manage Users Controller
     |--------------------------------------------------------------------------
     |
-    | This controller handles the management of users from a server administrator
+    | This controller handles the management of users from a server administrator.
     |
     */
 

@@ -2,7 +2,7 @@
 
 namespace ec5\Http\Middleware;
 
-    use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 
 class VerifyCsrfToken extends BaseVerifier
 {

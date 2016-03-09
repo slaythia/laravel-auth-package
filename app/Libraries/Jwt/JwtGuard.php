@@ -2,15 +2,14 @@
 
 namespace ec5\Libraries\Jwt;
 
-use RuntimeException;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
 use ec5\Libraries\Jwt\JwtUserProvider as UserProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+use Illuminate\Support\Str;
 use ec5\Libraries\Jwt\Jwt;
+use RuntimeException;
 use Cookie;
 use Config;
 
@@ -106,7 +105,7 @@ class JwtGuard implements Guard
      * JwtGuard constructor.
      * @param UserProvider $provider
      * @param Request|null $request
-     * @param \ec5\Libraries\Jwt\Jwt $jwt
+     * @param Jwt $jwt
      */
     public function __construct(UserProvider $provider, Request $request = null, Jwt $jwt)
     {

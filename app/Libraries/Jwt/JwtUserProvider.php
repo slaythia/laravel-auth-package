@@ -2,14 +2,17 @@
 
 namespace ec5\Libraries\Jwt;
 
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use ec5\Models\Contracts\ApiAuthorizableContract as ApiUserContract;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+use Illuminate\Contracts\Auth\UserProvider;
 use ec5\Models\Contracts\ApiUserProvider;
+use ec5\Libraries\Ldap\LdapUser;
+use Illuminate\Support\Str;
+use ec5\Models\Users\User;
 
-class JwtUserProvider implements UserProvider, ApiUserProvider {
+class JwtUserProvider implements UserProvider, ApiUserProvider
+{
 
     /**
      * The hasher implementation.
@@ -29,9 +32,9 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
      * Create a new database user provider.
      *
      * @param HasherContract $hasher
-     * @param $model
+     * @param User $model
      */
-    public function __construct(HasherContract $hasher, $model)
+    public function __construct(HasherContract $hasher, User $model)
     {
         $this->model = $model;
         $this->hasher = $hasher;
@@ -40,7 +43,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Retrieve a user by their unique identifier.
      *
-     * @param  mixed  $identifier
+     * @param  mixed $identifier
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveById($identifier)
@@ -51,8 +54,8 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param  mixed  $identifier
-     * @param  string  $token
+     * @param  mixed $identifier
+     * @param  string $token
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByToken($identifier, $token)
@@ -68,8 +71,8 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string  $token
+     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param  string $token
      * @return void
      */
     public function updateRememberToken(UserContract $user, $token)
@@ -83,7 +86,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
      * Update the api token for the given user in storage.
      *
      * @param  ApiUserContract $user
-     * @param  string  $token
+     * @param  string $token
      * @return void
      */
     public function updateApiToken(UserContract $user, $token)
@@ -96,7 +99,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Retrieve a user by the given credentials.
      *
-     * @param  array  $credentials
+     * @param  array $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveByCredentials(array $credentials)
@@ -107,7 +110,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
         $query = $this->createModel()->newQuery();
 
         foreach ($credentials as $key => $value) {
-            if (! Str::contains($key, 'password')) {
+            if (!Str::contains($key, 'password')) {
                 $query->where($key, $value);
             }
         }
@@ -118,8 +121,8 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Validate a user against the given credentials.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $credentials
+     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param  array $credentials
      * @return bool
      */
     public function validateCredentials(UserContract $user, array $credentials)
@@ -136,7 +139,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
      */
     public function createModel()
     {
-        $class = '\\'.ltrim($this->model, '\\');
+        $class = '\\' . ltrim($this->model, '\\');
 
         return new $this->model;
     }
@@ -154,7 +157,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Sets the hasher implementation.
      *
-     * @param  \Illuminate\Contracts\Hashing\Hasher  $hasher
+     * @param  \Illuminate\Contracts\Hashing\Hasher $hasher
      * @return $this
      */
     public function setHasher(HasherContract $hasher)
@@ -177,7 +180,7 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
     /**
      * Sets the name of the Eloquent user model.
      *
-     * @param  string  $model
+     * @param  string $model
      * @return $this
      */
     public function setModel($model)
@@ -186,4 +189,69 @@ class JwtUserProvider implements UserProvider, ApiUserProvider {
 
         return $this;
     }
+
+    /**
+     * Return social user if exists; create and return if doesn't
+     *
+     * @param $provider
+     * @param $providerUser
+     * @return UserContract|null
+     */
+    public function findOrCreateSocialUser($provider, $providerUser)
+    {
+        // Check if we already have registered
+        $user = $this->model->where('email', '=', $providerUser->email)->first();
+
+        if (!$user) {
+            // If not, create new
+            $user = $this->retrieveByCredentials([
+                'name' => $providerUser->name,
+                'email' => $providerUser->email,
+                'open_id' => $providerUser->id,
+                'provider' => $provider,
+                'state' => 'active',
+                'server_role' => 'basic'
+            ]);
+        }
+
+        // check user is active
+        if ($user->state == 'active') {
+            // update user avatar
+            $user->avatar = $providerUser->avatar;
+            $user->update();
+
+            return $user;
+        }
+
+    }
+
+    /**
+     * Return user if exists; create and return if doesn't
+     *
+     * @param LdapUser $ldapUser
+     * @return UserContract|null
+     */
+    public function findOrCreateLdapUser(LdapUser $ldapUser)
+    {
+        // Check if we already have registered
+        $user = $this->model->where('email', '=', $ldapUser->getAuthIdentifier())->first();
+
+        if (!$user) {
+            // If not, create new
+            $user = $this->retrieveByCredentials([
+                'name' => $ldapUser->getName(),
+                'email' => $ldapUser->getAuthIdentifier(),
+                'provider' => 'ldap',
+                'state' => 'active',
+                'role' => 'basic'
+            ]);
+        }
+
+        // check user is active
+        if ($user->state == 'active') {
+            return $user;
+        }
+
+    }
+
 }

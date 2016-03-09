@@ -2,11 +2,20 @@
 
 namespace ec5\Http\Middleware;
 
-use Closure;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 
 class AdminAuthenticate
 {
+
+    /*
+    |--------------------------------------------------------------------------
+    | AdminAuthenticate
+    |--------------------------------------------------------------------------
+    |
+    | This middleware checks the user is a logged in 'admin' before being allowed to proceed
+    |
+    */
 
     /**
      * Handle an incoming request.
