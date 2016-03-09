@@ -60,18 +60,18 @@ $col_size = ($col_size == 1) ? 2 : $col_size;
                                     <input class="form-control" required="required" placeholder="Password"
                                            name="password" type="password" value="" id="password">
                                 </div>
-                                <div class="form-group">
-                                    <label for="remember">Remember Me</label>
-                                    <input name="remember" type="checkbox" value="1" id="remember">
-                                </div>
+                                {{--<div class="form-group">--}}
+                                    {{--<label for="remember">Remember Me</label>--}}
+                                    {{--<input name="remember" type="checkbox" value="1" id="remember">--}}
+                                {{--</div>--}}
                                 <div class="form-group">
                                     <input class="btn btn-default btn-action pull-right" type="submit" value="Login">
                                 </div>
 
                             </form>
-                            <div class="form-group">
-                                <a href="{{url('password')}}">Forgot Password?</a>
-                            </div>
+                            {{--<div class="form-group">--}}
+                                {{--<a href="{{url('password')}}">Forgot Password?</a>--}}
+                            {{--</div>--}}
                         </div>
                     </div>
                 </div>

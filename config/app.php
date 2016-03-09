@@ -127,6 +127,8 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
+        // Jwt provider
+        ec5\Libraries\Jwt\JwtAuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
@@ -163,10 +165,8 @@ return [
         ec5\Libraries\Ldap\LdapServiceProvider::class,
 
         // HTML
-        Collective\Html\HtmlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class
 
-        // Jwt provider
-        ec5\Libraries\Jwt\JwtAuthServiceProvider::class
     ],
 
     /*
