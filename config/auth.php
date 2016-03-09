@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'jwt',
-            'model' => App\Models\Users\User::class,
+            'model' => ec5\Models\Users\User::class,
         ],
 
 //        'users' => [

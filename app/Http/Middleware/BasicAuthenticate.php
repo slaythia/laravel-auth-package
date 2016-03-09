@@ -30,20 +30,23 @@ class BasicAuthenticate
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param null $guard
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guest()) {
-            if ($request->ajax()) {
+        if (Auth::guard($guard)->guest()) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             } else {
                 return redirect()->guest('login');
             }
         }
 
-        // redirect if not admin or super admin
-        if ($this->auth->user()->isAdmin() || $this->auth->user()->isSuperAdmin()) {
+        $user = Auth::guard($guard)->user();
+
+        // Redirect if not admin or super admin
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
             return redirect('/');
         }
 

@@ -27,15 +27,15 @@ class AdminAuthenticate
         }
 
         $user = Auth::guard($guard)->user();
-        //dd(Auth::guard($guard)->jwtToken());
-        // check if user is active
+
+        // Check if user is active
         if (!$user->isActive()) {
             // if not, log out and redirect to login page with error
             Auth::guard($guard)->logout();
             return redirect()->guest('login')->withErrors(['Sorry, your account has been disabled.']);
         }
 
-        // redirect if not admin or super admin
+        // Redirect if not admin or super admin
         if (!$user->isAdmin() && !$user->isSuperAdmin()) {
             return redirect('/');
         }

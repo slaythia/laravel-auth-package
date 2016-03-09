@@ -27,7 +27,7 @@ class SuperAdminAuthenticate
 
         $user = Auth::guard($guard)->user();
 
-        // redirect if not super admin
+        // Redirect if not super admin
         if (!$user->isSuperAdmin()) {
             return redirect('/');
         }

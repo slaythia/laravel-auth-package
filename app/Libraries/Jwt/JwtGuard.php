@@ -7,14 +7,14 @@ use Illuminate\Support\Str;
 use ec5\Libraries\Jwt\JwtUserProvider as UserProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Auth\Guard as GuardContract;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use ec5\Libraries\Jwt\Jwt;
 use Cookie;
 use Config;
 
-class JwtGuard implements GuardContract
+class JwtGuard implements Guard
 {
     /**
      * The currently authenticated user.
@@ -166,6 +166,7 @@ class JwtGuard implements GuardContract
             if ($claim) {
                 // Retrieve api_token value
                 $jtiToken = $claim->jti;
+
                 // Retrieve the user
                 $this->user = $this->provider->retrieveByCredentials(
                     [$this->storageKey => $jtiToken]

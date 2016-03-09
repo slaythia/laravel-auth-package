@@ -13,10 +13,23 @@
 
     {{-- Success Message --}}
     @if (session('message'))
-        <div class="alert alert-success">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ session('message') }}
-        </div>
+        <div class="var-holder-success" data-message="{{ session('message') }}"></div>
+        <script>
+            //Display a success toast, with a title
+            toastr.options = {
+                closeButton: true,
+                positionClass: 'toast-top-center',
+                preventDuplicates: true,
+                onclick: null,
+                showDuration: 500,
+                hideDuration: 500,
+                timeOut: 3000,
+                extendedTimeOut: 0,
+                showMethod: 'fadeIn',
+                hideMethod: 'fadeOut'
+            };
+            toastr.success($('.var-holder-success').attr('data-message'));
+        </script>
     @endif
 
 

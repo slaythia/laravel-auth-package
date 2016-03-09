@@ -2,6 +2,7 @@
 @extends('app')
 
 @section('content')
+
     <div class="title">Server Admin Login</div>
 
     @foreach($errors->all() as $error)
@@ -42,7 +43,7 @@
                             <input name="remember" type="checkbox" value="1" id="remember">
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-default" type="submit" value="Login">
+                            <input class="btn btn-default btn-action" type="submit" value="Login">
                         </div>
 
                     </form>

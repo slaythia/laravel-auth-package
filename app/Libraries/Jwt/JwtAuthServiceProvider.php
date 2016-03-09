@@ -2,12 +2,14 @@
 
 namespace ec5\Libraries\Jwt;
 
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
+//use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use ec5\Repositories\Eloquent\User\UserRepository;
 use ec5\Libraries\Jwt\JwtUserProvider;
 use ec5\Libraries\Jwt\JwtGuard;
 use ec5\Libraries\Jwt\Jwt;
 use ec5\Models\Users\User;
+use Auth;
 
 /**
  * Extend the Auth Guard service by adding a 'jwt' driver
@@ -18,11 +20,6 @@ use ec5\Models\Users\User;
 class JwtAuthServiceProvider extends ServiceProvider
 {
 
-    public function register()
-    {
-        //
-    }
-
     /**
      * Register any application authentication / authorization services.
      *
@@ -30,25 +27,30 @@ class JwtAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['auth']->extend('jwt', function()
+        Auth::extend('jwt', function($app, $name, array $config)
         {
             // Create new Jwt User provider
-            $provider = new JwtUserProvider($this->app['hash'], new User);
+            $provider = new JwtUserProvider($app['hash'], new User);
             // Pass this to the Jwt Guard
-            $guard = new JwtGuard($provider, $this->app['request'], new Jwt(new UserRepository));
+            $guard = new JwtGuard($provider, $app['request'], new Jwt(new UserRepository));
 
             // Set cookie jar
             if (method_exists($guard, 'setCookieJar')) {
-                $guard->setCookieJar($this->app['cookie']);
+                $guard->setCookieJar($app['cookie']);
             }
 
             // Refresh request
             if (method_exists($guard, 'setRequest')) {
-                $guard->setRequest($this->app->refresh('request', $guard, 'setRequest'));
+                $guard->setRequest($app->refresh('request', $guard, 'setRequest'));
             }
 
             return $guard;
 
         });
+    }
+
+    public function register()
+    {
+        //
     }
 }

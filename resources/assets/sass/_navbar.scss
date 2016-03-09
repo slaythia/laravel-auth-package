@@ -1,0 +1,36 @@
+.navbar {
+  min-height: 60px !important;
+  padding-left: 10px;
+  padding-right: 10px;
+  .navbar-brand {
+    padding: 10px;
+  }
+  .navbar-text {
+    margin-top: 18.5px;
+    color:$dark-grey!important;
+  }
+  .navbar-nav > li > a {
+    color: $deep-purple!important;
+    font-weight: bold;
+  }
+  .navbar-nav > li {
+    border-bottom:2px solid #fff;
+    margin-top:-2px;
+  }
+  .navbar-nav > li:hover {
+    border-color:$deep-purple;
+  }
+
+  img.navbar-brand.img-circle {
+    margin-top: 5px;
+    margin-right: 0;
+  }
+  .material-icons {
+    vertical-align: middle;
+    margin-top:-3px;
+  }
+  i {
+    //to avoid FOUC, but icon is still bliking a bit
+    min-width:24px;
+  }
+}

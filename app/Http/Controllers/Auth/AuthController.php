@@ -54,11 +54,6 @@ class AuthController extends Controller
     protected $authMethods = [];
 
     /**
-     * @var Jwt
-     */
-    protected $jwt;
-
-    /**
      * @var int
      */
     protected $expirationTime = 60;
@@ -68,12 +63,11 @@ class AuthController extends Controller
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(UserRepository $userRepository, Jwt $jwt)
+    public function __construct(UserRepository $userRepository)
     {
         // Set middleware to guest, exempting getLogout as this requires a logged in user
         $this->middleware('guest', ['except' => ['getLogout']]);
         $this->userRepository = $userRepository;
-        $this->jwt = $jwt;
 
         // Determine which authentication methods are available
         $this->authMethods = Config::get('auth.auth_methods');
@@ -262,12 +256,7 @@ class AuthController extends Controller
                     // Login user
                     Auth::login($user, true);
                     return $this->handleUserWasAuthenticated($request, null);
-//                    // Redirect to home or admin page, depending on server role
-//                    if ($user->role == 'basic') {
-//                        return view('app');
-//                    } else {
-//                        return redirect($this->adminRedirectPath);
-//                    }
+
                 }
 
             }
@@ -287,33 +276,4 @@ class AuthController extends Controller
 
     }
 
-//    /**
-//     * Get a validator for an incoming registration request.
-//     *
-//     * @param  array $data
-//     * @return \Illuminate\Contracts\Validation\Validator
-//     */
-//    protected function validator(array $data)
-//    {
-//        return Validator::make($data, [
-//            'name' => 'required|max:255',
-//            'email' => 'required|email|max:255|unique:users',
-//            'password' => 'required|min:6|confirmed',
-//        ]);
-//    }
-
-//    /**
-//     * Create a new user instance after a valid registration.
-//     *
-//     * @param  array $data
-//     * @return User
-//     */
-//    protected function create(array $data)
-//    {
-//        return User::create([
-//            'name' => $data['name'],
-//            'email' => $data['email'],
-//            'password' => bcrypt($data['password']),
-//        ]);
-//    }
 }
