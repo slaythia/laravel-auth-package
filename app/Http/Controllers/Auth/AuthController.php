@@ -61,6 +61,10 @@ class AuthController extends Controller
         // Always pass the authentication method variables to the login view
         View::composer('auth.login', function ($view) {
             $view->with('authMethods', $this->authMethods);
+            // Set column size for responsive layout
+            $colSize = 12 / (count($this->authMethods) > 0 ? count($this->authMethods) : 1);
+            $colSize = ($colSize == 1) ? 2 : $colSize;
+            $view->with('colSize', $colSize);
         });
 
     }

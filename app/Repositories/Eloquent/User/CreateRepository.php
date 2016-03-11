@@ -26,7 +26,6 @@ trait CreateRepository {
             $this->errors = ['ec5_39'];
         }
 
-
     }
 
     /**
@@ -46,14 +45,13 @@ trait CreateRepository {
             $user =  $this->create([
                 'name' => $providerUser->name,
                 'email' => $providerUser->email,
-                'open_id' => $providerUser->id,
                 'provider' => $provider,
                 'state' => 'active',
                 'server_role' => 'basic'
             ]);
         }
 
-        // check user is active
+        // Check user is active
         if ($user->state == 'active') {
             // update user avatar
             $user->avatar = $providerUser->avatar;
@@ -61,8 +59,6 @@ trait CreateRepository {
 
             return $user;
         }
-
-
 
     }
 
@@ -88,7 +84,7 @@ trait CreateRepository {
             ]);
         }
 
-        // check user is active
+        // Check user is active
         if ($user->state == 'active') {
             return $user;
         }

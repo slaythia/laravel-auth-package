@@ -148,7 +148,7 @@ class AuthController extends Controller
                     Auth::login($user, false);
                     $apiResponse->data = [];
                     // Return response
-                    return $apiResponse->toJsonResponse(200, 'data', 0, ['Authorization' => 'Bearer ' . Auth::jwtToken()]);
+                    return $apiResponse->toJsonResponse(200, 'data', 0, ['Authorization' => Auth::authorizationHeader()]);
 
                 }
 
@@ -200,7 +200,7 @@ class AuthController extends Controller
                     Auth::login($socialUser, false);
                     $apiResponse->data = [];
                     // Return response
-                    return $apiResponse->toJsonResponse(200, 'data', 0, ['Authorization' => 'Bearer ' . Auth::jwtToken()]);
+                    return $apiResponse->toJsonResponse(200, 'data', 0, ['Authorization' => Auth::authorizationHeader()]);
 
                 }
             } catch (Exception $e) {

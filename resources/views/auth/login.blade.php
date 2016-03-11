@@ -1,9 +1,3 @@
-<?php
-//set column size for resposive layout
-$col_size = 12 / sizeof($authMethods);
-$col_size = ($col_size == 1) ? 2 : $col_size;
-?>
-
 @extends('app')
 
 @section('content')
@@ -19,7 +13,7 @@ $col_size = ($col_size == 1) ? 2 : $col_size;
     @if (session('message'))
         <div class="var-holder-success" data-message="{{trans('status_codes.'.session('message'))}}"></div>
         <script>
-            //Display a success toast, with a title
+            // Display a success toast, with a title
             toastr.options = {
                 closeButton: true,
                 positionClass: 'toast-top-center',
@@ -42,7 +36,7 @@ $col_size = ($col_size == 1) ? 2 : $col_size;
         <div class="row page-login">
 
             @if (in_array('local', $authMethods))
-                <div class="col-lg-{{$col_size}} col-md-{{$col_size}}">
+                <div class="col-lg-{{$colSize}} col-md-{{$colSize}}">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
@@ -77,7 +71,7 @@ $col_size = ($col_size == 1) ? 2 : $col_size;
                 </div>
             @endif
             @if (in_array('google', $authMethods))
-                <div class="col-lg-{{$col_size}} col-md-{{$col_size}}">
+                <div class="col-lg-{{$colSize}} col-md-{{$colSize}}">
                     <div class="panel panel-default ">
                         <div class="panel-body page-login__google-login">
                             <a class="btn full-width" href="{{ url('redirect/google') }}">
@@ -89,7 +83,7 @@ $col_size = ($col_size == 1) ? 2 : $col_size;
                 </div>
             @endif
             @if (in_array('ldap', $authMethods))
-                <div class="col-lg-{{$col_size}} col-md-{{$col_size}}">
+                <div class="col-lg-{{$colSize}} col-md-{{$colSize}}">
                     <div class="panel panel-default row-eq-height">
                         <div class="panel-body">
 

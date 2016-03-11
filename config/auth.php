@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'users'
     ],
 
     /*
@@ -44,7 +44,7 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
-        ],
+        ]
     ],
 
     /*
@@ -68,17 +68,7 @@ return [
         'users' => [
             'driver' => 'jwt',
             'model' => ec5\Models\Users\User::class,
-        ],
-
-//        'users' => [
-//            'driver' => 'eloquent',
-//            'model' => App\Models\Users\User::class,
-//        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        ]
     ],
 
     /*

@@ -37,7 +37,9 @@ class ManageUsersController extends Controller
      */
     public function __construct(UserRepository $userRepository)
     {
+        // Set middleware to admin, which covers super admin/admin server roles
         $this->middleware('auth.admin');
+
         $this->userRepository = $userRepository;
 
     }
@@ -207,7 +209,6 @@ class ManageUsersController extends Controller
 
             return $users;
         }
-
 
     }
 

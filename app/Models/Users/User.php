@@ -24,14 +24,14 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password', 'avatar', 'open_id', 'provider', 'state', 'server_role'];
+    protected $fillable = ['name', 'email', 'password', 'avatar', 'provider', 'state', 'server_role'];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token', 'open_id'];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Always capitalise each name when we save it to the database.
@@ -82,12 +82,18 @@ class User extends Model implements AuthenticatableContract,
     /**
      * Determine if the current user has a specified role.
      *
-     * @param $role
+     * @param array $roles
      * @return bool
      */
-    public function hasRole($role)
+    public function hasServerRole(array $roles)
     {
-        return $this->server_role == $role;
+        // Check if the user has a role
+        foreach ($roles as $role) {
+            if ($role === $this->server_role) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

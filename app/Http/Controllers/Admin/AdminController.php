@@ -6,6 +6,7 @@ use ec5\Repositories\Eloquent\User\UserRepository;
 use ec5\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use ec5\Http\Requests;
+use Gate;
 
 class AdminController extends Controller
 {
@@ -29,10 +30,12 @@ class AdminController extends Controller
      *
      * @param UserRepository $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, Request $request)
     {
+
         // Set middleware to admin, which covers super admin/admin server roles
         $this->middleware('auth.admin');
+
         $this->userRepository = $userRepository;
     }
 
@@ -44,6 +47,7 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
+
         // Get request data
         $data = $request->all();
         $perPage = 10;

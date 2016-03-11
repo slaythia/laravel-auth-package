@@ -26,6 +26,11 @@ class JwtAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        Auth::provider('jwt', function($app, array $config) {
+            return new JwtUserProvider($app['hash'], new User);
+        });
+
         Auth::extend('jwt', function($app, $name, array $config)
         {
             // Create new Jwt User provider
@@ -46,6 +51,7 @@ class JwtAuthServiceProvider extends ServiceProvider
             return $guard;
 
         });
+
     }
 
     public function register()

@@ -2,6 +2,6 @@
 
 @section('content')
 
-<h2>Could not find for the thing you wanted... ref in url ?</h2>
+<h2>Sorry, you are not authorized to view this page.</h2>
 
 @stop

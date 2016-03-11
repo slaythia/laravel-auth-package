@@ -5,6 +5,7 @@ namespace ec5\Providers;
 use Illuminate\Support\ServiceProvider;
 use Config;
 use Lang;
+use Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,17 +16,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $navBarHi = trans('site.hi');
+        $navBarLogIn = trans('site.login');
+        $navBarLogOut = trans('site.logout');
+        $navBarAdmin = trans('site.admin');
 
-        $siteLogin = Lang::get('site.login');
-        $siteAdmin = Lang::get('site.admin');
-        $siteLogout = Lang::get('site.logout');
-
-        // Set parameters shared with all views
-        view()->share('siteLogin', $siteLogin);
-        view()->share('siteAdmin', $siteAdmin);
-        view()->share('siteLogout', $siteLogout);
+        view()->share('navBarHi', $navBarHi);
+        view()->share('navBarLogIn', $navBarLogIn);
+        view()->share('navBarLogOut', $navBarLogOut);
+        view()->share('navBarAdmin', $navBarAdmin);
         view()->share('siteTitle', Config::get('app.site_title'));
-
     }
 
     /**

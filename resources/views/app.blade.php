@@ -32,7 +32,7 @@
     @yield ('css')
     <script src="{!! asset('/js/vendor.js') !!}"></script>
     <script>
-        var SITE_URL = '{{ url('') }}'
+        var SITE_URL = '{{ url('') }}';
 
         $.ajaxSetup({
             headers: {

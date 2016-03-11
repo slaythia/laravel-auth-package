@@ -16,14 +16,13 @@
 | Application Routes
 |--------------------------------------------------------------------------
 |
-| This route group applies the "web" middleware group to every route
-| it contains. The "web" middleware group is defined in your HTTP
-| kernel and includes session state, CSRF protection, and more.
+| Here we specify a 'web' route middleware for all internal requests.
+| For external api requests, we use the 'api' route middleware.
 |
 */
 
 // Internal web routes
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['internal']], function () {
 
     Route::get('/', 'HomeController@index');
 
@@ -78,7 +77,7 @@ Route::group(['middleware' => ['web']], function () {
 
 
 // External JSON API routes
-Route::group(['prefix' => 'api/json', 'middleware' => ['api']], function () {
+Route::group(['prefix' => 'api/json', 'middleware' => ['external']], function () {
 
     // Auth
     Route::get('login', 'Api\Json\Auth\AuthController@getLogin');

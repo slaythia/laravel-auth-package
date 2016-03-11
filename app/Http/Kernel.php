@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
-        'web' => [
+        'internal' => [
             \ec5\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -31,7 +31,7 @@ class Kernel extends HttpKernel
             \ec5\Http\Middleware\VerifyCsrfToken::class
         ],
 
-        'api' => [
+        'external' => [
             'throttle:60,1'
         ],
     ];

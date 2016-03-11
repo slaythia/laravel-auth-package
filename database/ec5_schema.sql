@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS `epicollect5`.`users` (
  `email` varchar(255) NOT NULL,
  `password` varchar(255) NOT NULL,
  `avatar` varchar(200) NOT NULL,
- `open_id` varchar(200) NOT NULL,
  `provider` varchar(200) NOT NULL,
  `remember_token` varchar(200) NOT NULL,
  `server_role` enum('basic','admin','superadmin') NOT NULL DEFAULT 'basic',
